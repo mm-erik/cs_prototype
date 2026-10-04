@@ -216,12 +216,47 @@ export const EMPTY_CONVERSATION: Conversation = {
   messages: [],
 }
 
+/**
+ * A Conversation the End User and the Bot are still adding to. What a Support Agent reads
+ * is a snapshot: `endedAt` is null and more Messages may follow after the page was
+ * rendered. This is a status on a normal `found` result, never an error.
+ */
+export const IN_PROGRESS_CONVERSATION: Conversation = {
+  id: 'conv_00000000-0000-4000-8000-000000000006',
+  tenant: { id: 'tenant_00000006', name: 'Example Utilities' },
+  startedAt: '2026-03-09T13:05:00.000Z',
+  endedAt: null,
+  status: 'in_progress',
+  messages: [
+    {
+      id: 'msg_in_progress_001',
+      author: 'end_user',
+      content: 'My meter reading was rejected as implausible. Reading is 014872.',
+      sentAt: '2026-03-09T13:05:00.000Z',
+    },
+    {
+      id: 'msg_in_progress_002',
+      author: 'bot',
+      content:
+        'Thank you. That is lower than your last reading of 015003, which is why it was rejected. Let me check whether the meter was replaced.',
+      sentAt: '2026-03-09T13:05:40.000Z',
+    },
+    {
+      id: 'msg_in_progress_003',
+      author: 'end_user',
+      content: 'Yes, it was swapped out in February.',
+      sentAt: '2026-03-09T13:06:15.000Z',
+    },
+  ],
+}
+
 const CONVERSATIONS: readonly Conversation[] = [
   SHORT_HAPPY_PATH_CONVERSATION,
   LONG_CONVERSATION,
   MARKDOWN_HEAVY_CONVERSATION,
   LONG_PAUSE_CONVERSATION,
   EMPTY_CONVERSATION,
+  IN_PROGRESS_CONVERSATION,
 ]
 
 /**

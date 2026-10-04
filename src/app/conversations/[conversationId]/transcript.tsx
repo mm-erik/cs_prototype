@@ -23,11 +23,11 @@ export function Transcript({ conversation }: { conversation: Conversation }) {
   return (
     <section>
       {/*
-        The page needs a top-level heading, and the Conversation header ticket owns the
-        visible one above this area. Until that lands, this keeps the document outline
-        from starting partway down at a Message's own heading.
+        The visible heading above this area is the Conversation header's, which names the
+        Tenant. This names the region itself for anyone navigating by heading, and keeps
+        the outline from jumping straight to a Message.
       */}
-      <h1 className="sr-only">Transcript</h1>
+      <h2 className="sr-only">Transcript</h2>
 
       <ol className="flex flex-col gap-3">
         {conversation.messages.map((message, index) => {
@@ -55,7 +55,7 @@ export function Transcript({ conversation }: { conversation: Conversation }) {
 function EmptyConversation() {
   return (
     <div className="rounded-lg border border-dashed border-slate-300 px-4 py-6 text-center">
-      <h1 className="text-sm font-medium text-slate-900">This Conversation has no Messages</h1>
+      <h2 className="text-sm font-medium text-slate-900">This Conversation has no Messages</h2>
       <p className="mt-1 text-sm text-slate-600">
         The End User opened the chat and left without saying anything. Nothing has gone
         wrong here, and there is nothing further to read.

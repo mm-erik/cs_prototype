@@ -6,6 +6,7 @@ import { lookupConversation } from '@/conversation/lookup-conversation'
 
 import type { ConversationId } from '@/conversation/types'
 
+import { ConversationHeader } from './conversation-header'
 import { Transcript } from './transcript'
 
 /**
@@ -42,7 +43,12 @@ export default async function ConversationPage({
         redirect(`/conversations/${result.conversation.id}`)
       }
 
-      return <Transcript conversation={result.conversation} />
+      return (
+        <>
+          <ConversationHeader conversation={result.conversation} />
+          <Transcript conversation={result.conversation} />
+        </>
+      )
   }
 }
 

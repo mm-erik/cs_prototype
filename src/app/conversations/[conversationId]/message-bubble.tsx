@@ -1,5 +1,6 @@
 import type { Message } from '@/conversation/types'
 
+import { formatExactTime } from './format-time'
 import { MessageContent } from './message-content'
 
 /**
@@ -26,13 +27,17 @@ export function MessageBubble({ message }: { message: Message }) {
         ].join(' ')}
       >
         <header className="flex items-baseline gap-2">
-          <h2
+          {/*
+            `h3` because the Conversation header owns the page's `h1` (the Tenant name)
+            and the Transcript region heading is the `h2` above these.
+          */}
+          <h3
             className={`text-xs font-semibold uppercase tracking-wide ${
               fromBot ? 'text-slate-500' : 'text-sky-100'
             }`}
           >
             {fromBot ? 'Bot' : 'End User'}
-          </h2>
+          </h3>
 
           {/*
             The exact time is in the markup but out of the way, so the Transcript stays
@@ -67,26 +72,4 @@ export function MessageBubble({ message }: { message: Message }) {
       </article>
     </li>
   )
-}
-
-/**
- * Rendered in UTC and labelled as such. A Support Agent is checking a Transcript against
- * the time window in a ticket, so an unambiguous reading beats a local one — and a fixed
- * zone means the server and the browser cannot disagree.
- */
-function formatExactTime(sentAt: string): string {
-  const at = new Date(sentAt)
-
-  // A store that hands over something unparseable should not turn the Transcript into a
-  // row of NaNs. Showing the value as given is both more honest and more debuggable.
-  if (Number.isNaN(at.getTime())) {
-    return sentAt
-  }
-
-  const pad = (value: number) => String(value).padStart(2, '0')
-
-  const date = `${at.getUTCFullYear()}-${pad(at.getUTCMonth() + 1)}-${pad(at.getUTCDate())}`
-  const time = `${pad(at.getUTCHours())}:${pad(at.getUTCMinutes())}:${pad(at.getUTCSeconds())}`
-
-  return `${date} ${time} UTC`
 }

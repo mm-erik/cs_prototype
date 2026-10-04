@@ -55,10 +55,12 @@ src/app/
   lookup-form.tsx                       the Lookup input
   conversations/[conversationId]/
     page.tsx                            per-Conversation route and its failure states
+    conversation-header.tsx             Tenant, Conversation ID, start time, count, status
     transcript.tsx                      the Transcript, gap markers, Empty Conversation
     message-bubble.tsx                  one Message as a chat bubble
     message-content.tsx                 the only component that knows content is Markdown
     gap-marker.tsx                      the "N minutes later" separator
+    format-time.ts                      one UTC formatter, shared by header and Messages
 
 src/conversation/                       the domain and the seam, meant to outlive the rest
 ```
@@ -85,6 +87,7 @@ because this repository is public. They all live in
 | `conv_00000000-0000-4000-8000-000000000003`  | A Markdown-heavy Bot answer: table, list, code block, links — and literal HTML shown as text |
 | `conv_00000000-0000-4000-8000-000000000004`  | A long pause, so the gap marker appears        |
 | `conv_00000000-0000-4000-8000-000000000005`  | An Empty Conversation, which explains itself   |
+| `conv_00000000-0000-4000-8000-000000000006`  | An In-Progress Conversation, labelled as still ongoing |
 | `conv_00000000-0000-4000-8000-0000000000ff`  | Unknown Conversation — reserved, never exists  |
 | `conv_00000000-0000-4000-8000-0000000000fe`  | Unavailable — reserved, the store throws       |
 
