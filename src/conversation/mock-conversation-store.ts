@@ -2,6 +2,18 @@ import type { ConversationStore } from './conversation-store'
 import type { Conversation } from './types'
 
 /**
+ * Reserved Conversation IDs, which no Conversation will ever occupy.
+ *
+ * They exist so that a Support Agent, or whoever demonstrates this tool, can reach every
+ * failure state by pasting an ID rather than by editing code. The fixture directory ticket
+ * lists these on screen; until then they are documented in `README.md`.
+ */
+export const RESERVED_UNKNOWN_CONVERSATION_ID =
+  'conv_00000000-0000-4000-8000-0000000000ff'
+export const RESERVED_UNAVAILABLE_CONVERSATION_ID =
+  'conv_00000000-0000-4000-8000-0000000000fe'
+
+/**
  * The one Conversation the prototype can find today: a short, ordinary exchange.
  *
  * This repository is public, so every value here is obviously synthetic. Later tickets add
@@ -55,10 +67,24 @@ const CONVERSATIONS: readonly Conversation[] = [SHORT_HAPPY_PATH_CONVERSATION]
 /**
  * The mock implementation of the swap point. A database-backed `ConversationStore`
  * replaces this later and nothing else has to change.
+ *
+ * Asking for the reserved unavailable Conversation ID throws, which is how a real store
+ * will behave when the database cannot be reached. Asking for the reserved unknown one
+ * simply finds nothing, because no Conversation holds it.
  */
 export function createMockConversationStore(): ConversationStore {
   return {
     async findConversation(id) {
+      if (id === RESERVED_UNAVAILABLE_CONVERSATION_ID) {
+        throw new Error('the mock data source is pretending to be unreachable')
+      }
+
+      // Reserved, so the reservation is enforced here rather than merely documented: no
+      // Conversation added later can accidentally occupy it and break the Unknown case.
+      if (id === RESERVED_UNKNOWN_CONVERSATION_ID) {
+        return null
+      }
+
       return CONVERSATIONS.find((conversation) => conversation.id === id) ?? null
     },
   }

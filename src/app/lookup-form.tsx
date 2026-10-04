@@ -7,8 +7,9 @@ import { useState } from 'react'
  * The Lookup input. Submitting by Enter or by the button both navigate to the Conversation
  * route, where the Lookup itself runs server-side.
  *
- * Tolerant parsing of what a Support Agent pastes belongs to a later ticket, as does the
- * list of recent Lookups.
+ * The input is passed on exactly as pasted. Tolerating whitespace, quotes and a full URL
+ * is the seam's job, so that there is only ever one parser; the list of recent Lookups
+ * belongs to a later ticket.
  */
 export function LookupForm() {
   const router = useRouter()

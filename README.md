@@ -56,7 +56,25 @@ src/app/
     page.tsx                            per-Conversation route
 ```
 
-Tests live beside the code they cover as `*.test.ts`. There are none yet: per `CLAUDE.md`
-only `lookupConversation` is tested, and it arrives in the next ticket, so Vitest is
-configured with `passWithNoTests` and `npm test` passes against an empty suite. The user
-interface is deliberately never tested.
+Tests live beside the code they cover as `*.test.ts`. Per `CLAUDE.md` only
+`lookupConversation` is tested, driven by a fake `ConversationStore`. Those tests double as
+the specification the eventual database-backed store must satisfy. The user interface is
+deliberately never tested.
+
+## Fixture Conversation IDs
+
+Paste these into the Lookup input to reach each outcome by hand. Every value is synthetic,
+because this repository is public. All three live in
+`src/conversation/mock-conversation-store.ts`, the two reserved ones as named constants.
+
+| Conversation ID                             | Outcome                                  |
+| -------------------------------------------- | ---------------------------------------- |
+| `conv_00000000-0000-4000-8000-000000000001`  | Found — a short, ordinary exchange        |
+| `conv_00000000-0000-4000-8000-0000000000ff`  | Unknown Conversation — reserved, never exists |
+| `conv_00000000-0000-4000-8000-0000000000fe`  | Unavailable — reserved, the store throws  |
+
+Anything that is not a `conv_` prefix followed by a UUID is a Malformed Conversation ID, so
+pasting a ticket number reaches that state.
+
+The input forgives how a Conversation ID is actually pasted: surrounding whitespace,
+surrounding quotes, and a full URL to a Conversation all resolve to the same Lookup.
