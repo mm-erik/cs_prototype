@@ -32,15 +32,15 @@ LookupResult =
   | { kind: 'unavailable' }
 ```
 
-Every Lookup outcome a Support Agent can reach comes from this one function, and it is the
-only module with tests. Tolerant parsing lives inside it: a Support Agent does not
-distinguish a bad paste from a missing Conversation, so the outcomes belong in one union.
+Every Lookup outcome a Support Agent can reach comes from this one function. Tolerant
+parsing lives inside it: a Support Agent does not distinguish a bad paste from a
+Conversation that does not exist, so the outcomes belong in one union.
 
 `ConversationStore` is the **swap point**, not the test seam. It is an interface, injected
 into `lookupConversation`, with a mock implementation today and a database implementation
 later. Tests substitute a fake store to drive the seam into every outcome.
 
-Keep these two roles apart: one interface to swap, one function to test.
+Keep these two roles apart: one interface to swap, one function driven by the tests.
 
 ## Settled decisions
 
@@ -67,11 +67,22 @@ interface tests, and pagination for long Transcripts.
 
 ## Testing
 
-Vitest. Tests target `lookupConversation` driven by a fake `ConversationStore`, and assert
-behaviour a Support Agent could observe, named in glossary vocabulary. The user interface is
-deliberately untested: it is disposable, and the seam is the part meant to outlive the
-prototype. These tests double as the specification the real database-backed
-`ConversationStore` must satisfy.
+Vitest. The rule is **pure logic is tested, the user interface is not.** The user interface
+is deliberately untested: it is disposable, and the seam is the part meant to outlive the
+prototype. Every test asserts behaviour a Support Agent could observe, named in glossary
+vocabulary.
+
+Two modules are tested:
+
+- `lookupConversation`, driven by a fake `ConversationStore`. These tests double as the
+  specification the real database-backed `ConversationStore` must satisfy.
+- `transcriptForClipboard`, a Conversation in and a Markdown string out. It is logic rather
+  than interface, and what it guarantees — that author labels survive the copy — is the
+  whole point of the copy action.
+
+The ban is on testing the user interface, not on the number of modules. A new pure
+function earns tests when what it guarantees is behaviour a Support Agent depends on; a
+component does not.
 
 ## This repository is public
 

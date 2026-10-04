@@ -56,6 +56,7 @@ src/app/
   conversations/[conversationId]/
     page.tsx                            per-Conversation route and its failure states
     conversation-header.tsx             Tenant, Conversation ID, start time, count, status
+    copy-transcript-button.tsx          'use client' — puts the Transcript on the clipboard
     transcript.tsx                      the Transcript, gap markers, Empty Conversation
     message-bubble.tsx                  one Message as a chat bubble
     message-content.tsx                 the only component that knows content is Markdown
@@ -64,6 +65,11 @@ src/app/
 
 src/conversation/                       the domain and the seam, meant to outlive the rest
 ```
+
+One action copies the whole Transcript as Markdown, with the author labels intact, so the
+End User and the Bot stay distinguishable once the text is pasted into a ticket. The
+Markdown source is copied rather than the rendered output, because tickets are usually
+Markdown-aware.
 
 Message content renders as Markdown with raw HTML disabled. "Verbatim" in this project
 means nothing an End User typed is masked or redacted; it does not mean executing markup

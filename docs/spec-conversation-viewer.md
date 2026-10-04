@@ -181,8 +181,11 @@ that behaviour. A test that asserts how parsing is split from lookup, which comp
 rendered what, or the shape of an internal helper is testing implementation and should not
 be written.
 
-- **One module is tested: `lookupConversation`.** It is the highest point at which every
-  user-visible outcome is observable, and the only public operation the application has.
+- **`lookupConversation` is the module the tests are built around.** It is the highest
+  point at which every user-visible outcome is observable, and the only public operation
+  the application has. The rule is that pure logic is tested and the user interface is
+  not: `transcriptForClipboard` was added later on the same grounds, because author labels
+  surviving a copy is behaviour a Support Agent depends on.
 - Tests drive it with a fake `ConversationStore`, which is what makes every outcome reachable
   without a database and without stubbing modules.
 - Coverage: each of the four `LookupResult` kinds; `Empty Conversation` and `In-Progress`
