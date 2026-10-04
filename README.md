@@ -94,11 +94,16 @@ because this repository is public. They all live in
 | `conv_00000000-0000-4000-8000-000000000004`  | A long pause, so the gap marker appears        |
 | `conv_00000000-0000-4000-8000-000000000005`  | An Empty Conversation, which explains itself   |
 | `conv_00000000-0000-4000-8000-000000000006`  | An In-Progress Conversation, labelled as still ongoing |
+| `conv_00000000-0000-4000-8000-000000000007`  | Sensitive-looking content, shown verbatim rather than masked |
 | `conv_00000000-0000-4000-8000-0000000000ff`  | Unknown Conversation — reserved, never exists  |
 | `conv_00000000-0000-4000-8000-0000000000fe`  | Unavailable — reserved, the store throws       |
 
 Anything that is not a `conv_` prefix followed by a UUID is a Malformed Conversation ID, so
 pasting a ticket number reaches that state.
+
+The landing screen lists all of these, so every state can be reached by clicking without
+reading any of this. It also offers back the last few Conversations you looked up, kept in
+your own browser.
 
 The input forgives how a Conversation ID is actually pasted: surrounding whitespace,
 surrounding quotes, and a full URL to a Conversation all resolve to the same Lookup.

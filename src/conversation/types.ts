@@ -1,8 +1,8 @@
 /**
  * The identifier a Support Agent is given and types into this tool: a `conv_` prefix
- * followed by a UUID. It stays a plain string for now. A branded type earns its keep once
- * there is a parser to produce it, and detecting a Malformed Conversation ID belongs to a
- * later ticket.
+ * followed by a UUID. It stays a plain string: the only thing that produces one is
+ * `lookupConversation`, which validates the shape before any store is consulted, so a
+ * branded type would add ceremony without adding a guarantee.
  */
 export type ConversationId = string
 

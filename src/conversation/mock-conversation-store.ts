@@ -5,8 +5,8 @@ import type { Conversation, Message } from './types'
  * Reserved Conversation IDs, which no Conversation will ever occupy.
  *
  * They exist so that a Support Agent, or whoever demonstrates this tool, can reach every
- * failure state by pasting an ID rather than by editing code. The fixture directory ticket
- * lists these on screen; until then they are documented in `README.md`.
+ * failure state by pasting an ID rather than by editing code. They appear in
+ * `FIXTURE_DIRECTORY` below, which is what puts them on the landing screen.
  */
 export const RESERVED_UNKNOWN_CONVERSATION_ID =
   'conv_00000000-0000-4000-8000-0000000000ff'
@@ -250,6 +250,133 @@ export const IN_PROGRESS_CONVERSATION: Conversation = {
   ],
 }
 
+/**
+ * An End User pastes what looks like account data while asking for help, and this tool
+ * shows it exactly as typed.
+ *
+ * That is the point of the fixture. Transcripts render verbatim: no masking, no redaction,
+ * however sensitive the content looks. Redaction belongs where the data is read, so that
+ * every consumer of the database benefits, rather than this one viewer creating false
+ * confidence. It is the decision most likely to be questioned by a future reader, so it
+ * gets a fixture that makes it impossible to miss.
+ *
+ * This repository is public, so every value below is drawn from somewhere documented as
+ * unusable, and the list is exhaustive:
+ *
+ * - `4111 1111 1111 1111` is the published Visa test card number.
+ * - `example.com` is reserved by RFC 2606.
+ * - `555-0142` sits in the `555-0100`–`555-0199` block NANPA reserves for fiction, here
+ *   with the `212` area code so it is a well-formed number that can never be dialled.
+ * - The API key is deliberately not shaped like any real vendor's. An earlier draft used
+ *   a Stripe test-mode prefix, and GitHub's push protection rejected it on sight even
+ *   with an all-zero body. That was the right call for a public repository, and the
+ *   lesson is kept here: a fixture only has to *look* credential-shaped to a reader, not
+ *   to a secret scanner.
+ *
+ * Nothing resembling real data goes in this repository, ever.
+ */
+export const SENSITIVE_LOOKING_CONVERSATION: Conversation = {
+  id: 'conv_00000000-0000-4000-8000-000000000007',
+  tenant: { id: 'tenant_00000007', name: 'Example Insurance' },
+  startedAt: '2026-03-10T11:48:00.000Z',
+  endedAt: '2026-03-10T11:51:20.000Z',
+  status: 'ended',
+  messages: [
+    {
+      id: 'msg_sensitive_001',
+      author: 'end_user',
+      content:
+        'My payment keeps bouncing. Card is 4111 1111 1111 1111, expiry 01/30, and the account email is a.taylor@example.com. Phone is +1 212 555 0142 if you need to call.',
+      sentAt: '2026-03-10T11:48:00.000Z',
+    },
+    {
+      id: 'msg_sensitive_002',
+      author: 'bot',
+      content:
+        'Thanks. Please avoid sending card details over chat in future — I only need the last four digits. I can see the payment was declined by the issuing bank rather than by us.',
+      sentAt: '2026-03-10T11:49:05.000Z',
+    },
+    {
+      id: 'msg_sensitive_003',
+      author: 'end_user',
+      content:
+        'Understood, sorry. I also tried the API with key EXAMPLE-API-KEY-0000-0000-0000 and got a 402 back.',
+      sentAt: '2026-03-10T11:50:30.000Z',
+    },
+    {
+      id: 'msg_sensitive_004',
+      author: 'bot',
+      content:
+        'A 402 there means the same declined payment. Your bank will need to authorise it before the API call can succeed.',
+      sentAt: '2026-03-10T11:51:20.000Z',
+    },
+  ],
+}
+
+/** One row of the "try these" list on the landing screen. */
+export interface FixtureEntry {
+  /** What a Support Agent pastes, which for the Malformed row is not a Conversation ID. */
+  input: string
+  demonstrates: string
+}
+
+/**
+ * Every state of this application, reachable by clicking rather than by reading source.
+ * That is what makes the prototype demoable by someone who did not build it.
+ *
+ * The Conversation IDs are taken from the fixtures themselves rather than retyped, so a
+ * renamed or renumbered fixture cannot leave this list pointing at nothing.
+ *
+ * This belongs to the mock store and disappears with it: a database-backed
+ * `ConversationStore` has no fixtures to advertise.
+ */
+export const FIXTURE_DIRECTORY: readonly FixtureEntry[] = [
+  { input: SHORT_HAPPY_PATH_CONVERSATION.id, demonstrates: 'A short, ordinary exchange' },
+  { input: LONG_CONVERSATION.id, demonstrates: 'A long Conversation of sixty Messages' },
+  {
+    input: MARKDOWN_HEAVY_CONVERSATION.id,
+    demonstrates: 'A Bot answer with a table, a list, a code block and links',
+  },
+  {
+    input: LONG_PAUSE_CONVERSATION.id,
+    demonstrates: 'A long pause, so the gap marker appears',
+  },
+  {
+    input: EMPTY_CONVERSATION.id,
+    demonstrates: 'An Empty Conversation, which explains itself',
+  },
+  {
+    input: IN_PROGRESS_CONVERSATION.id,
+    demonstrates: 'An In-Progress Conversation, still being added to',
+  },
+  {
+    input: SENSITIVE_LOOKING_CONVERSATION.id,
+    demonstrates: 'Sensitive-looking content, shown verbatim rather than masked',
+  },
+  {
+    input: RESERVED_UNKNOWN_CONVERSATION_ID,
+    demonstrates: 'An Unknown Conversation: well-formed, but no Conversation has it',
+  },
+  {
+    input: RESERVED_UNAVAILABLE_CONVERSATION_ID,
+    demonstrates: 'The data source cannot be reached',
+  },
+]
+
+/**
+ * Not a Conversation ID at all, which is exactly the point: pasting a ticket number is how
+ * a Support Agent reaches the Malformed Conversation ID state.
+ *
+ * It is kept apart from the list above because everything there is a well-formed
+ * Conversation ID — including the two reserved ones, which are well-formed but match no
+ * Conversation. That is the distinction a Support Agent is being shown: a bad paste versus
+ * a Conversation that does not exist.
+ */
+export const MALFORMED_EXAMPLE: FixtureEntry = {
+  input: 'TICKET-4821',
+  demonstrates: 'Not a Conversation ID at all',
+}
+
 const CONVERSATIONS: readonly Conversation[] = [
   SHORT_HAPPY_PATH_CONVERSATION,
   LONG_CONVERSATION,
@@ -257,6 +384,7 @@ const CONVERSATIONS: readonly Conversation[] = [
   LONG_PAUSE_CONVERSATION,
   EMPTY_CONVERSATION,
   IN_PROGRESS_CONVERSATION,
+  SENSITIVE_LOOKING_CONVERSATION,
 ]
 
 /**

@@ -8,8 +8,9 @@ import { useState } from 'react'
  * route, where the Lookup itself runs server-side.
  *
  * The input is passed on exactly as pasted. Tolerating whitespace, quotes and a full URL
- * is the seam's job, so that there is only ever one parser; the list of recent Lookups
- * belongs to a later ticket.
+ * is the seam's job, so that there is only ever one parser — which is also why this
+ * component never learns whether a Lookup succeeded, and so can never record a typo into
+ * the recent Lookups list.
  */
 export function LookupForm() {
   const router = useRouter()

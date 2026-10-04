@@ -7,6 +7,7 @@ import { lookupConversation } from '@/conversation/lookup-conversation'
 import type { ConversationId } from '@/conversation/types'
 
 import { ConversationHeader } from './conversation-header'
+import { RecordRecentLookup } from './record-recent-lookup'
 import { Transcript } from './transcript'
 
 /**
@@ -47,6 +48,14 @@ export default async function ConversationPage({
         <>
           <ConversationHeader conversation={result.conversation} />
           <Transcript conversation={result.conversation} />
+          {/*
+            Renders nothing. Only a Lookup that reached this branch found a Conversation,
+            which is what keeps typos and dead IDs out of the Support Agent's list.
+          */}
+          <RecordRecentLookup
+            id={result.conversation.id}
+            tenantName={result.conversation.tenant.name}
+          />
         </>
       )
   }
