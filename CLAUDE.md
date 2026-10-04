@@ -76,3 +76,21 @@ prototype. These tests double as the specification the real database-backed
 ## This repository is public
 
 Fixtures use obviously synthetic values. Real Transcript data never lands here.
+
+## Generated block below
+
+Everything after this line is written by `next dev` and re-created whenever it runs, so it
+is committed rather than fought with. It is not ours and not editable. Note that it uses
+the unqualified word "agent": that is the Next.js toolchain's own wording and the one
+exemption from the vocabulary rule above. Hand-written text in this repository still says
+**Bot** or **Support Agent**, never a bare "agent".
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
