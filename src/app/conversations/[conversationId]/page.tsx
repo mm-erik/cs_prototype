@@ -3,12 +3,17 @@ import type { ReactNode } from 'react'
 
 import { createMockConversationStore } from '@/conversation/mock-conversation-store'
 import { lookupConversation } from '@/conversation/lookup-conversation'
-import type { Conversation, ConversationId, Message } from '@/conversation/types'
+
+import type { ConversationId } from '@/conversation/types'
+
+import { Transcript } from './transcript'
 
 /**
- * Rendering the Transcript here is deliberately plain: correct, not yet pleasant. The chat
- * presentation ticket replaces it. The failure states below are this ticket's own, and each
- * one names the next action a Support Agent should take.
+ * The Conversation route: one Lookup, then one of its four outcomes.
+ *
+ * The Transcript itself lives in `transcript.tsx`. Each failure state below names the next
+ * action a Support Agent should take, because a dead end with no instruction is how a
+ * Support Agent ends up escalating the wrong thing.
  */
 export default async function ConversationPage({
   params,
@@ -116,32 +121,5 @@ function Unavailable() {
       This is a fault in this tool, not in what you pasted. No Lookup can succeed until the
       data source is back.
     </FailureState>
-  )
-}
-
-function Transcript({ conversation }: { conversation: Conversation }) {
-  return (
-    <section className="space-y-4">
-      <h1 className="text-xl font-semibold tracking-tight">Transcript</h1>
-      <ol className="space-y-3">
-        {conversation.messages.map((message) => (
-          <li key={message.id}>
-            <TranscriptMessage message={message} />
-          </li>
-        ))}
-      </ol>
-    </section>
-  )
-}
-
-function TranscriptMessage({ message }: { message: Message }) {
-  return (
-    <article>
-      <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-        {message.author === 'bot' ? 'Bot' : 'End User'}
-      </h2>
-      {/* Content is Markdown source, shown as plain text until the presentation ticket. */}
-      <p className="whitespace-pre-wrap text-sm">{message.content}</p>
-    </article>
   )
 }

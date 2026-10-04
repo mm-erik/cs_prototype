@@ -52,9 +52,20 @@ src/app/
   layout.tsx                            root layout and the page shell
   globals.css                           Tailwind entry point
   page.tsx                              landing route
+  lookup-form.tsx                       the Lookup input
   conversations/[conversationId]/
-    page.tsx                            per-Conversation route
+    page.tsx                            per-Conversation route and its failure states
+    transcript.tsx                      the Transcript, gap markers, Empty Conversation
+    message-bubble.tsx                  one Message as a chat bubble
+    message-content.tsx                 the only component that knows content is Markdown
+    gap-marker.tsx                      the "N minutes later" separator
+
+src/conversation/                       the domain and the seam, meant to outlive the rest
 ```
+
+Message content renders as Markdown with raw HTML disabled. "Verbatim" in this project
+means nothing an End User typed is masked or redacted; it does not mean executing markup
+that arrives in a Transcript, so HTML in a Message is shown as text rather than run.
 
 Tests live beside the code they cover as `*.test.ts`. Per `CLAUDE.md` only
 `lookupConversation` is tested, driven by a fake `ConversationStore`. Those tests double as
@@ -64,14 +75,18 @@ deliberately never tested.
 ## Fixture Conversation IDs
 
 Paste these into the Lookup input to reach each outcome by hand. Every value is synthetic,
-because this repository is public. All three live in
+because this repository is public. They all live in
 `src/conversation/mock-conversation-store.ts`, the two reserved ones as named constants.
 
-| Conversation ID                             | Outcome                                  |
-| -------------------------------------------- | ---------------------------------------- |
-| `conv_00000000-0000-4000-8000-000000000001`  | Found — a short, ordinary exchange        |
-| `conv_00000000-0000-4000-8000-0000000000ff`  | Unknown Conversation — reserved, never exists |
-| `conv_00000000-0000-4000-8000-0000000000fe`  | Unavailable — reserved, the store throws  |
+| Conversation ID                             | What it exercises                             |
+| -------------------------------------------- | --------------------------------------------- |
+| `conv_00000000-0000-4000-8000-000000000001`  | A short, ordinary exchange                     |
+| `conv_00000000-0000-4000-8000-000000000002`  | A long Conversation, around sixty Messages     |
+| `conv_00000000-0000-4000-8000-000000000003`  | A Markdown-heavy Bot answer: table, list, code block, links — and literal HTML shown as text |
+| `conv_00000000-0000-4000-8000-000000000004`  | A long pause, so the gap marker appears        |
+| `conv_00000000-0000-4000-8000-000000000005`  | An Empty Conversation, which explains itself   |
+| `conv_00000000-0000-4000-8000-0000000000ff`  | Unknown Conversation — reserved, never exists  |
+| `conv_00000000-0000-4000-8000-0000000000fe`  | Unavailable — reserved, the store throws       |
 
 Anything that is not a `conv_` prefix followed by a UUID is a Malformed Conversation ID, so
 pasting a ticket number reaches that state.

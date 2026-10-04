@@ -19,7 +19,7 @@ export type MessageAuthor = 'end_user' | 'bot'
 export interface Message {
   id: string
   author: MessageAuthor
-  /** Markdown source. Rendered as plain text until the presentation ticket. */
+  /** Markdown source, rendered through a single isolated component. */
   content: string
   /** ISO 8601 timestamp. */
   sentAt: string
